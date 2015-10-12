@@ -358,7 +358,7 @@ for i = 1:length(d)
                 %Checks the version of matlab. If version is >= 2011b
                 %matlab supports writing of multiframe images to dicom
                 %otherwhise this function skips the RD-file.
-                if strcmpi(version('-release'),'2011b') || strcmpi(version('-release'),'2012a') || strcmpi(version('-release'),'2013b')  || strcmpi(version('-release'),'2014a')
+                if strcmpi(version('-release'),'2011b') || strcmpi(version('-release'),'2012a') || strcmpi(version('-release'),'2013b')  || strcmpi(version('-release'),'2014a' || strcmpi(version('-release'),'2014b' || strcmpi(version('-release'),'2015a' || strcmpi(version('-release'),'2015b')
                     %This data below might be incorrect... Sad panda.
                     I.StudyInstanceUID = newStudyInstanceUID;
                     I.SOPInstanceUID = newDoseReferenceUID;
@@ -372,7 +372,7 @@ for i = 1:length(d)
                     continue
                 end
                 
-            elseif strcmpi(d(i).name(1:2),'CT')
+            elseif strcmpi(d(i).name(1:2),'CT') || strcmpi(I.Modality,'CT')
                 %write the new SOPInstanceUID and MediaStorageSOPInstanceUID;
                 if firstTrigger == 1
                     firstTrigger = i;
