@@ -549,6 +549,26 @@ for i = 1:length(d)
                 newCTSOPInstanceUID(finalCutPos:end) = sprintf('%07d',(numForSOPInstanceUIDcalc));
                 CheckSop{i-(firstTrigger-1),1} = I.SOPInstanceUID;
                 I.FrameOfReferenceUID = newFrameOfReferenceUID;    
+            
+            elseif strcmpi(d(i).name(1:2),'PE') || || strcmpi(I.Modality,'PT')
+                %write the new SOPInstanceUID and MediaStorageSOPInstanceUID;
+                if firstTrigger == 1
+                    firstTrigger = i;
+                end
+                storedSOPInstanceUID{i-(firstTrigger-1)} = I.SOPInstanceUID;
+                
+                I.SOPInstanceUID = newCTSOPInstanceUID;
+                I.MediaStorageSOPInstanceUID = I.SOPInstanceUID;
+                %write the new StudyInstanceUID
+                I.StudyInstanceUID = newStudyInstanceUID;
+                %write the new SeriesInstanceUID
+                I.SeriesInstanceUID = newSeriesInstanceUID;
+                
+                %Creates the following SOPInstanceUID for the PET
+                numForSOPInstanceUIDcalc = str2double(newCTSOPInstanceUID(finalCutPos:end))+1;
+                newCTSOPInstanceUID(finalCutPos:end) = sprintf('%07d',(numForSOPInstanceUIDcalc));
+                CheckSop{i-(firstTrigger-1),1} = I.SOPInstanceUID;
+                I.FrameOfReferenceUID = newFrameOfReferenceUID;   
             end
             
             dicomwrite(dicomread(I),[writefolder,filesep,d(i).name(1:2),'.',I.SOPInstanceUID,'.dcm'],I,'Createmode','Copy')
