@@ -550,7 +550,7 @@ for i = 1:length(d)
                 CheckSop{i-(firstTrigger-1),1} = I.SOPInstanceUID;
                 I.FrameOfReferenceUID = newFrameOfReferenceUID;    
             
-            elseif strcmpi(d(i).name(1:2),'PE') || || strcmpi(I.Modality,'PT')
+            elseif strcmpi(d(i).name(1:2),'PE') || strcmpi(I.Modality,'PT')
                 %write the new SOPInstanceUID and MediaStorageSOPInstanceUID;
                 if firstTrigger == 1
                     firstTrigger = i;
