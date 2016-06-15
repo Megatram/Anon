@@ -22,7 +22,7 @@ function varargout = Anon(varargin)
 
 % Edit the above text to modify the response to help Anon
 
-% Last Modified by GUIDE v2.5 15-May-2015 11:45:22
+% Last Modified by GUIDE v2.5 15-Jun-2016 08:36:52
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -110,7 +110,7 @@ end
 function makeAnon_Callback(hObject, eventdata, handles)
 
 checkSOPwritetoRTstruct;
-status = replaceUIDfunction(handles.patInfo,handles.pathData);
+status = replaceUIDfunction(handles.patInfo,handles.pathData,handles);
 set(handles.currentStatus,'String',status)
 
 guidata(hObject,handles)
@@ -130,7 +130,7 @@ guidata(hObject,handles)
 % --- Executes on button press in changeImpPath.
 function changeImpPath_Callback(hObject, eventdata, handles)
 handles.pathData.importPath = uigetdir(pwd,'Select Import Path');
-handles.pathData.exportPath = [handles.pathData.importPath,filesep,'AnonFiles',filesep];
+handles.pathData.exportPath = [handles.pathData.importPath,filesep,'AnonFiles'];
 set(handles.currentImportPath,'String',handles.pathData.importPath);
 set(handles.currentExportPath,'String',handles.pathData.exportPath);
 guidata(hObject,handles)
@@ -222,7 +222,7 @@ else
 end
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function status = replaceUIDfunction(patInfo,pathData)
+function status = replaceUIDfunction(patInfo,pathData,handles)
 %Replace dicomuid
 %place this file with the dcm files that should have their uids changed:
 %
@@ -248,7 +248,32 @@ mkdir (pathData.exportPath);
 
 d = dir(here);
 clear I;
+% Start Loop for duplications Only sets the number of loops if the
+% duplicate is active. 
+useDupl = get(handles.checkboxDupli,'Value'); 
+if useDupl
+    numLoops = str2double(get(handles.editDupl,'String'));
+else
+    numLoops = 1; 
+end
 
+
+for Xi = 1:numLoops
+
+%Correct output folder name in case of duplication activated.
+if useDupl 
+writefolder = [pathData.exportPath,num2str(Xi,'%0.2d'),filesep];
+if
+patInfo.ID = [patInfo.ID,'_',num2str(Xi,'%0.2d')]; 
+patInfo.FamilyName = [patInfo.FamilyName,'_',num2str(Xi,'%0.2d')]; 
+patInfo.GivenName = [patInfo.GivenName,'_',num2str(Xi,'%0.2d')]; 
+end
+else
+writefolder = [pathData.exportPath,filesep];
+end
+
+%Creates new dir.
+mkdir (writefolder);
 %Sets UIDs that cannot be generated on the fly:
 newStudyInstanceUID = dicomuid;
 newSeriesInstanceUID = dicomuid;
@@ -272,8 +297,12 @@ newMRSeriesT1FLAIRInstanceUID = dicomuid;
 
 newMRSeriesT2InstanceUID = dicomuid;
 
-
+%Sets the title of the waiting window if the user is using duplication mode
+if useDupl
+h = waitbar(0,['Please wait, running' num2str(Xi),'/', num2str(numLoops),'...']);    
+else
 h = waitbar(0,'Please wait...');
+end
 steps = length(d);
 firstTrigger = 1;
 
@@ -358,7 +387,7 @@ for i = 1:length(d)
                 %Checks the version of matlab. If version is >= 2011b
                 %matlab supports writing of multiframe images to dicom
                 %otherwhise this function skips the RD-file.
-                if strcmpi(version('-release'),'2011b') || strcmpi(version('-release'),'2012a') || strcmpi(version('-release'),'2013b')  || strcmpi(version('-release'),'2014a') || strcmpi(version('-release'),'2014b') || strcmpi(version('-release'),'2015a') || strcmpi(version('-release'),'2015b')
+                if strcmpi(version('-release'),'2011b') || strcmpi(version('-release'),'2012a') || strcmpi(version('-release'),'2013b')  || strcmpi(version('-release'),'2014a') || strcmpi(version('-release'),'2014b') || strcmpi(version('-release'),'2015a') || strcmpi(version('-release'),'2015b') || strcmpi(version('-release'),'2016a') || strcmpi(version('-release'),'2016b')
                     %This data below might be incorrect... Sad panda.
                     I.StudyInstanceUID = newStudyInstanceUID;
                     I.SOPInstanceUID = newDoseReferenceUID;
@@ -582,8 +611,10 @@ for i = 1:length(d)
     waitbar(i / steps)
 end
 close(h)
+% End loop
+end
+status = ['Success! There were ',num2str(warningTag),' warning(s). Files are in Export folder(s)'];
 
-status = ['Success! There were ',num2str(warningTag),' warning(s). Files are in Export folder'];
 function helpButton_Callback(hObject, ~, handles)
 % hObject    handle to helpButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -609,8 +640,48 @@ helpdlg({'Currently Anon can anonymize the following dicom-file combinations'
     ''
     'NOTE: On first usage you will be asked to edit the file dicom_prep_SOPCommon.m as this file contains an error code which will make the program unable to write the correct UID to dicom-RS files.'
     ''
+    'News: You can now duplicate sets if you need multiple copies of the patient in you database.'
     ''
     'Disclamer:'
     'You use this program at your own responsibility. Plans that has been saved with the program shall in no case be used to treat human beings or animals and only be used in research or QA. It is expressly prohibited to use the software for any commercial purposes. And remember to give credit where credit is due.'
     ''
     'Report any bugs to jonas.bengtssonscherman@gmail.com'})
+
+
+
+function editDupl_Callback(hObject, eventdata, handles)
+% hObject    handle to editDupl (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of editDupl as text
+%        str2double(get(hObject,'String')) returns contents of editDupl as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function editDupl_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editDupl (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkboxDupli.
+function checkboxDupli_Callback(hObject, eventdata, handles)
+% hObject    handle to checkboxDupli (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+button_state = get(hObject,'Value');
+if button_state == get(hObject,'Min')
+    set(handles.editDupl,'Visible','off')
+elseif button_state == get(hObject,'Max')
+    set(handles.editDupl,'Visible','on')  
+end
+
+
+% Hint: get(hObject,'Value') returns toggle state of checkboxDupli
