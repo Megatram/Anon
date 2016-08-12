@@ -263,11 +263,11 @@ for Xi = 1:numLoops
 %Correct output folder name in case of duplication activated.
 if useDupl 
 writefolder = [pathData.exportPath,num2str(Xi,'%0.2d'),filesep];
-if
+
 patInfo.ID = [patInfo.ID,'_',num2str(Xi,'%0.2d')]; 
 patInfo.FamilyName = [patInfo.FamilyName,'_',num2str(Xi,'%0.2d')]; 
 patInfo.GivenName = [patInfo.GivenName,'_',num2str(Xi,'%0.2d')]; 
-end
+
 else
 writefolder = [pathData.exportPath,filesep];
 end
