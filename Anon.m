@@ -337,7 +337,7 @@ for i = 1:length(d)
         %change tags for hospital, modality and protocol
         I.InstitutionName = 'Hospital';  
         I.StationName = 'Station Name';
-        I.InstitutionAdress = 'Hospital'; 
+        I.InstitutionAddress = 'Hospital'; 
         I.InstitutionalDepartmentName = 'Hospital'; 
         I.ClinicalTrialSponsorName = '';
         I.ClinicalTrialProtocolID = ''; 
