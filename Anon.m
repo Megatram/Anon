@@ -369,6 +369,7 @@ for i = 1:length(d)
         I.PatientName.NamePrefix='';
         I.PatientBirthDate = PatientNewBirthDate;
         I.PatientBirthTime = '';
+        I.PatientAddress = '';
         
         I.PatientSex='';
         I.OtherPatientID='';
