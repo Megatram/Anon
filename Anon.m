@@ -317,7 +317,11 @@ for i = 1:length(d)
         clear I
        
         if isdicom([here,d(i).name])
-            I = dicominfo([here,d(i).name]);
+            try
+                I = dicominfo([here,d(i).name]);
+            catch 
+                I = dicominfo([here,d(i).name],'UseDictionaryVR',true,'UseVRHeuristic',false);
+            end
             %change the name of the patient and id
 
         %change tags for study dates
