@@ -320,6 +320,8 @@ for i = 1:length(d)
             try
                 I = dicominfo([here,d(i).name]);
             catch 
+                warningTag = warningTag + 1;
+                warndlg(['Error when reading file: ',d(i).name,'. This error has been seen when reading structures with characters: åäöæø. I will try to anonymize, but don''t expect any miracles. You should rename these structures in the TPS and try to run the Anon again.'])
                 I = dicominfo([here,d(i).name],'UseDictionaryVR',true,'UseVRHeuristic',false);
             end
             %change the name of the patient and id
