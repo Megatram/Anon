@@ -509,6 +509,24 @@ for i = 1:length(d)
                         I.StructureSetROISequence.(ROINum).ReferencedFrameOfReferenceUID = newFrameOfReferenceUID;
                     end
                 end
+                for xx = 1:length(fieldnames(I.BeamSequence))
+                      FieldName = ['Item_' num2str(xx)];
+                        if isfield(I.BeamSequence.(FieldName),'InstitutionalDepartmentName')
+                          %ANonymized additional names in the BeamSequence
+                          %struct. 
+                          I.BeamSequence.(FieldName).InstitutionalDepartmentName = ''; 
+                        end
+                end
+                        
+                
+                for xx = 1:length(fieldnames(I.BeamSequence))
+                      FieldName = ['Item_' num2str(xx)];
+                        if isfield(I.BeamSequence.(FieldName),'InstitutionName')
+                        %ANonymized additional names in the BeamSequence
+                        %struct. 
+                          I.BeamSequence.(FieldName).InstitutionName = '';      
+                        end
+                end
                 if isfield(I,'ROIContourSequence')
                     for aa = 1:length(fieldnames(I.ROIContourSequence))
                         %Selects the ROI number
