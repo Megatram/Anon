@@ -1,6 +1,6 @@
 # Anon
 # This is a matlab gui that anonymizes dicomfiles. 
-# Its primary use is in radiotherapy where it keeps the connection between CT-data, structure-sets, treatment plan and 3D-dose. 
+# Its primary use is in radiotherapy where it keeps the connection between CT-data, structureset, treatment plan and 3D-dose. 
 # It can also be used to duplicate data and storing the same CT-data twice in the treatment planning software, useful for QA-plans on multiple linacs.
 # It can also be used for PET and MR image sets, However the InstanceUID disappears and you have to register the data again in the treatment planning software. This process is fairly easy and you should register images based on their dicom-origin.  
 # 2016-06-15: Added duplication functionality where you now can create multiple copies of the files for use in the same database. Please note that the software automatically adds _01 etc on the CPR and the Last name for the patient.  
