@@ -394,7 +394,7 @@ for i = 1:length(d)
                 %Checks the version of matlab. If version is >= 2011b
                 %matlab supports writing of multiframe images to dicom
                 %otherwhise this function skips the RD-file.
-                if strcmpi(version('-release'),'2011b') || strcmpi(version('-release'),'2012a') || strcmpi(version('-release'),'2013b')  || strcmpi(version('-release'),'2014a') || strcmpi(version('-release'),'2014b') || strcmpi(version('-release'),'2015a') || strcmpi(version('-release'),'2015b') || strcmpi(version('-release'),'2016a') || strcmpi(version('-release'),'2016b')
+                if strcmpi(version('-release'),'2011b') || strcmpi(version('-release'),'2012a') || strcmpi(version('-release'),'2013b')  || strcmpi(version('-release'),'2014a') || strcmpi(version('-release'),'2014b') || strcmpi(version('-release'),'2015a') || strcmpi(version('-release'),'2015b') || strcmpi(version('-release'),'2016a') || strcmpi(version('-release'),'2016b'|| strcmpi(version('-release'),'2017a') || strcmpi(version('-release'),'2017b' || strcmpi(version('-release'),'2018a') || strcmpi(version('-release'),'2018b')
                     %This data below might be incorrect... Sad panda.
                     I.StudyInstanceUID = newStudyInstanceUID;
                     I.SOPInstanceUID = newDoseReferenceUID;
@@ -403,7 +403,7 @@ for i = 1:length(d)
                     I.FrameOfReferenceUID = newFrameOfReferenceUID;
                     I.SeriesInstanceUID = dicomuid;
                 else
-                    disp('Warning you matlab version does not support writing of multiframe images! HerpaDerp')
+                    disp('Warning you matlab version does not support writing of multiframe images!')
                     warningTag = warningTag + 1;
                     continue
                 end
